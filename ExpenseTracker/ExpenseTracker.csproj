@@ -34,6 +34,9 @@
       <None Update="tessdata\deu.traineddata">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="tessdata\deu_latf.traineddata">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

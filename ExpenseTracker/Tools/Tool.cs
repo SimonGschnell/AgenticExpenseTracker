@@ -26,7 +26,7 @@ public class Tool
     public string ReadReceipt(string receiptPath)
     {
         var tessDataPath = System.IO.Path.Combine(AppContext.BaseDirectory, "tessdata");
-        using var engine = new TesseractEngine(tessDataPath, "deu", EngineMode.Default);
+        using var engine = new TesseractEngine(tessDataPath, "deu_latf", EngineMode.Default);
         using var img = Pix.LoadFromFile(receiptPath);
         using var page = engine.Process(img, PageSegMode.SparseText);
 
