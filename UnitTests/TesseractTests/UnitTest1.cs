@@ -6,7 +6,7 @@ public class UnitTest1
 {
     [Theory]
     [InlineData("testReceipt.jpeg")]
-    public void Test1(string filePath)
+    public void ReadImageTest(string filePath)
     {
         var tessDataPath = Path.Combine(AppContext.BaseDirectory, $"TesseractTests\\tessdata");
         using var engine = new TesseractEngine(tessDataPath, "deu", EngineMode.Default);
