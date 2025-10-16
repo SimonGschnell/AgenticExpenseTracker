@@ -22,13 +22,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="TesseractTests\tessdata\deu.traineddata">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TesseractTests\testReceipt.jpeg">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TesseractTests\tessdata\deu_latf.traineddata">
+      <ProjectReference Include="..\AgentLibrary\AgentLibrary.csproj" />
+      <ProjectReference Include="..\ExpenseTracker\ExpenseTracker.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="profil.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

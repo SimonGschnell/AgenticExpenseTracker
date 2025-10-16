@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{F33DC364-E309-4D4C-B1E5-26FF5CEF6C11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentLibrary", "AgentLibrary\AgentLibrary.csproj", "{6F83A056-118F-4DD2-91A9-907BC35A1862}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{F33DC364-E309-4D4C-B1E5-26FF5CEF6C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33DC364-E309-4D4C-B1E5-26FF5CEF6C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F33DC364-E309-4D4C-B1E5-26FF5CEF6C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F83A056-118F-4DD2-91A9-907BC35A1862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F83A056-118F-4DD2-91A9-907BC35A1862}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F83A056-118F-4DD2-91A9-907BC35A1862}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F83A056-118F-4DD2-91A9-907BC35A1862}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

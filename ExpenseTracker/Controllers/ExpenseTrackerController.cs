@@ -20,4 +20,5 @@ public class ExpenseTrackerController: ControllerBase
         await _expenseService.AddExpenseAsync(dto);
         return Ok("Expense added successfully");
     }
+    
 }

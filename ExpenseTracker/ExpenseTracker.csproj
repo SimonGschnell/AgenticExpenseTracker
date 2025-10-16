@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -14,11 +15,13 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.19" />
         <PackageReference Include="ModelContextProtocol" Version="0.3.0-preview.4" />
         <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.3.0-preview.4" />
+        <PackageReference Include="OpenAI" Version="2.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
         <PackageReference Include="Tesseract" Version="5.2.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AgentLibrary\AgentLibrary.csproj" />
       <ProjectReference Include="..\ExpenseTracker.Application\ExpenseTracker.Application.csproj" />
       <ProjectReference Include="..\ExpenseTracker.Infrastructure\ExpenseTracker.Infrastructure.csproj" />
       <ProjectReference Include="..\ExprenseTracker.Domain\ExprenseTracker.Domain.csproj" />
@@ -29,12 +32,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="receipt.jpg">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="tessdata\deu.traineddata">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="tessdata\deu_latf.traineddata">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
