@@ -16,14 +16,15 @@ public class AgentController: ControllerBase
         _agent = agent;
     }
     [HttpPost]
-    public async Task<string> InstructionWithImage([FromBody] PromptWithImage prompt)
+    public async Task<string> CreateExpenseFromImage([FromBody] string base64Image)
     {
-        await _agent.SendPromptWithImageAsync(prompt.Instruction, prompt.Base64Image);
-        var messages = _agent.GetChatLog();
-        var jsonSerializationOptions = new JsonSerializerOptions() { WriteIndented = true };
-        jsonSerializationOptions.Converters.Add(new JsonStringEnumConverter());
-        var serializedMessages = JsonSerializer.Serialize(messages,messages.GetType(), jsonSerializationOptions);
-        return serializedMessages;
+        const string createExpensePrompt = "try to read the total sum spent in the receipt and create a expense in the expenseTracker application for me";
+        return await _agent.SendPromptWithImageAsync( createExpensePrompt, base64Image);
+        // var messages = _agent.GetChatLog();
+        // var jsonSerializationOptions = new JsonSerializerOptions() { WriteIndented = true };
+        // jsonSerializationOptions.Converters.Add(new JsonStringEnumConverter());
+        // var serializedMessages = JsonSerializer.Serialize(messages,messages.GetType(), jsonSerializationOptions);
+        // return serializedMessages;
     }
 }
 
