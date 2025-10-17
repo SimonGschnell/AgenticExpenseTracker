@@ -42,11 +42,15 @@ public class Agent(ILLMAbstractFactory factory)
     private async Task<string> InteractWithLlm()
     {
         var response = await GetLlmResponse();
-        if (response.GetToolCalls().Count == 0) return response.Response;
-        
-        //todo: loop until no more tools to call
-        var llmToolResponse = await ExecuteTools(response.GetToolCalls());
-        return llmToolResponse.Response;
+        var toolCallCount = response.GetToolCalls().Count;
+        while (toolCallCount > 0)
+        {
+            response = await ExecuteTools(response.GetToolCalls());
+            toolCallCount = response.GetToolCalls().Count;
+            ChatLog.AddAssistantMessage(response);
+        }
+
+        return response.Response;
     }
 
     private async Task<ILLMRunTimeResponse> GetLlmResponse()
