@@ -72,7 +72,7 @@ public class AgentTest
     }
     
     [Fact]
-    public async Task MultipleRequestsWithTools()
+    public async Task LlmCallsMultipleTools()
     {
         ILLMAbstractFactory factory = new OllamaAbstractFactory();
         var agent = new Agent(factory);
@@ -82,11 +82,14 @@ public class AgentTest
         agent.AddTool(tool1);
         agent.AddTool(tool2);
         
-        var response1 = await user.Prompt("Use the tool GuessMyName to find out my name.");
-        var response2 = await user.Prompt("Get the weather in Berlin using the tool GetWeather.");
+        var response = await user.Prompt("Use the tool GuessMyName to find out my name and get the weather in Berlin using the tool GetWeather.");
         
-        Assert.Contains("Rumpelstilzchen".ToLower(), response1.ToLower());
-        Assert.Contains("25", response2.ToLower());
+        Assert.Contains("Rumpelstilzchen".ToLower(), response.ToLower());
+        Assert.Contains("25", response.ToLower());
+        Assert.Equal(6,agent.GetChatLog().Count());
+        Assert.Single(agent.GetChatLog().Where(message => message is OllamaMessage{Role: OllamaRoles.user}));
+        Assert.Equal(3,agent.GetChatLog().Count(message => message is OllamaMessage{Role: OllamaRoles.assistant}));
+        Assert.Equal(2,agent.GetChatLog().Count(message => message is OllamaMessage{Role: OllamaRoles.tool}));
     }
     
     [Fact]
