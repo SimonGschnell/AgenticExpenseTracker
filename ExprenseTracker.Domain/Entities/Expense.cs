@@ -43,4 +43,14 @@ public class Expense
         UpdatedAt = DateTime.UtcNow;
         
     }
+    
+    public void AddItem(ExpenseItem expenseItem)
+    {
+        ExpenseItems.Add(expenseItem);
+        expenseItem.Expense = this;
+    }
+    
+    //navigation
+    public List<ExpenseItem> ExpenseItems { get; set; } = [];
+
 }

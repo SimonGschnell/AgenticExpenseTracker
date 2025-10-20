@@ -52,6 +52,58 @@ namespace ExpenseTracker.Infrastructure.Migrations
 
                     b.ToTable("Expenses");
                 });
+
+            modelBuilder.Entity("ExprenseTracker.Domain.Entities.ExpenseItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ExpenseId")
+                        .HasColumnType("int");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Price", "ExprenseTracker.Domain.Entities.ExpenseItem.Price#Money", b1 =>
+                        {
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseId");
+
+                    b.ToTable("ExpenseItems");
+                });
+
+            modelBuilder.Entity("ExprenseTracker.Domain.Entities.ExpenseItem", b =>
+                {
+                    b.HasOne("ExprenseTracker.Domain.Entities.Expense", "Expense")
+                        .WithMany("ExpenseItems")
+                        .HasForeignKey("ExpenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Expense");
+                });
+
+            modelBuilder.Entity("ExprenseTracker.Domain.Entities.Expense", b =>
+                {
+                    b.Navigation("ExpenseItems");
+                });
 #pragma warning restore 612, 618
         }
     }

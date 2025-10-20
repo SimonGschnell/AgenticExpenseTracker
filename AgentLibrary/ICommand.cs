@@ -2,5 +2,5 @@ namespace AgentLibrary;
 
 public interface ICommand
 {
-    public string Execute(ToolCallContext toolCallContext);
+    public Task<string> Execute(ToolCallContext toolCallContext);
 }

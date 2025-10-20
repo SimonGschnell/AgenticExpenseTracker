@@ -43,7 +43,7 @@ public class Program
         builder.Services.AddAgentCommands();
         builder.Services.AddScoped<Agent>(sp =>
         {
-            var agent = new Agent(sp.GetRequiredService<ILLMAbstractFactory>());
+            var agent = new Agent(sp.GetRequiredService<ILLMAbstractFactory>(), sp.GetRequiredService<IServiceScopeFactory>());
             foreach (var command in sp.GetServices<ICommand>())
             {
                 agent.AddTool(command);

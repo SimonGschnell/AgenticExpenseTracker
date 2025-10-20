@@ -31,9 +31,6 @@
       <None Update="testdata\deu.traineddata">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="receipt.jpg">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
 </Project>

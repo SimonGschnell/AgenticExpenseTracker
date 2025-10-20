@@ -15,10 +15,10 @@ public class AgentController: ControllerBase
     {
         _agent = agent;
     }
-    [HttpPost]
+    [HttpPost("CreateExpenseFromImage")]
     public async Task<string> CreateExpenseFromImage([FromBody] string base64Image)
     {
-        const string createExpensePrompt = "try to read the total sum spent in the receipt and create a expense in the expenseTracker application for me";
+        const string createExpensePrompt = "try to read the total sum spent in the receipt and create an expense in the expenseTracker application for me";
         return await _agent.SendPromptWithImageAsync( createExpensePrompt, base64Image);
         // var messages = _agent.GetChatLog();
         // var jsonSerializationOptions = new JsonSerializerOptions() { WriteIndented = true };
@@ -26,6 +26,16 @@ public class AgentController: ControllerBase
         // var serializedMessages = JsonSerializer.Serialize(messages,messages.GetType(), jsonSerializationOptions);
         // return serializedMessages;
     }
+    
+    [HttpPost("CreateExpenseWithItemsFromImage")]
+    public async Task<string> CreateExpenseWithItemsFromImage([FromBody] string base64Image)
+    {
+        const string createExpensePrompt = """
+                                           Read the receipt in the image.
+                                           Verify that the sum of the expenseItems is equal to the total expense.
+                                           Create an expense in the expenseTracker application with the total sum of the receipt.
+                                           Create an expenseItem connected to the expense for every item on the receipt.
+                                           """;
+        return await _agent.SendPromptWithImageAsync( createExpensePrompt, base64Image);
+    }
 }
-
-public record PromptWithImage(string Instruction, string Base64Image);

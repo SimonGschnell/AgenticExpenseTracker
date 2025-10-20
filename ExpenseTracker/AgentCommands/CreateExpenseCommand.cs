@@ -19,7 +19,7 @@ public class CreateExpenseCommand: ICommand
     [ToolParameter("category", "string", "The category of the expense", typeof(Category))]
     [ToolParameter("currency", "string", "The currency of the expense", typeof(Currency))]
     [ToolParameter("description", "string", "An overall summary of the expense (short)")]
-    public string Execute(ToolCallContext toolCallContext)
+    public async Task<string> Execute(ToolCallContext toolCallContext)
     {
         try
         {
@@ -27,9 +27,9 @@ public class CreateExpenseCommand: ICommand
             var category = Enum.Parse<Category>(toolCallContext.GetArgument("category"));
             var currency = Enum.Parse<Currency>(toolCallContext.GetArgument("currency"));
             var description = toolCallContext.GetArgument("description");
-            _expenseService.AddExpenseAsync(new CreateExpenseDTO
+            var expenseId = await _expenseService.AddExpenseAsync(new CreateExpenseDTO
                 { Amount = amount, Description = description, Category = category, Currency = currency });
-            return "Expense was successfully created";
+            return $"Expense was successfully created with ID: {expenseId}";
         }
         catch (Exception ex)
         {

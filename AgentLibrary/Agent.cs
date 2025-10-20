@@ -2,18 +2,35 @@ using System.Reflection;
 using AgentLibrary.ImageReader;
 using AgentLibrary.LLMRuntime;
 using ExpenseTracker.LLMRuntime;
+using Microsoft.Extensions.DependencyInjection;
 using UnitTests;
 
 namespace AgentLibrary;
 
-public class Agent(ILLMAbstractFactory factory)
+public class Agent
 {
-    private IImageReader ImageReader { get; set; } = new FileStreamImageReader();
-    protected readonly ILLMChatLog ChatLog = factory.CreateLLMRunTimeChatLog("gpt-oss:120b-cloud", false);
-    private readonly ILLMRuntime _runtime = factory.CreateLLMRuntime();
-    private readonly ILLMModel _models = factory.CreateLLMModels();
 
-    private Dictionary<ToolInformation, ICommand> Tools { get; set; } = [];
+    public Agent(ILLMAbstractFactory factory)
+    {
+        _factory = factory;
+        ChatLog = _factory.CreateLLMRunTimeChatLog("gpt-oss:120b-cloud", false);
+        _runtime = _factory.CreateLLMRuntime();
+        _models = _factory.CreateLLMModels();
+    }
+    
+    public Agent(ILLMAbstractFactory factory, IServiceScopeFactory scopeFactory) : this(factory)
+    {
+        _scopeFactory = scopeFactory;
+    }
+    
+    private readonly ILLMAbstractFactory _factory;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private IImageReader ImageReader { get; set; } = new FileStreamImageReader();
+    protected readonly ILLMChatLog ChatLog;
+    private readonly ILLMRuntime _runtime;
+    private readonly ILLMModel _models;
+
+    private Dictionary<ToolInformation, Type> Tools { get; set; } = [];
 
     public async Task<string> SendPromptAsync(string input)
     {
@@ -64,9 +81,23 @@ public class Agent(ILLMAbstractFactory factory)
     {
         foreach (var toolCall in toolCalls)
         {
-            var entry = Tools.FirstOrDefault(t => t.Key.Name == toolCall.Name);
-            var commandResponse = entry.Value.Execute(new ToolCallContext(toolCall.Arguments));
-            ChatLog.AddToolResponse(commandResponse);
+            if (_scopeFactory is null)
+            {
+                var entry = Tools.FirstOrDefault(t => t.Key.Name == toolCall.Name);
+                var command = Activator.CreateInstance(entry.Value) as ICommand;
+                var commandResponse = await command?.Execute(new ToolCallContext(toolCall.Arguments))!;
+                ChatLog.AddToolResponse(commandResponse);
+            }
+            else
+            {
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var entry = Tools.FirstOrDefault(t => t.Key.Name == toolCall.Name);
+                    var command = scope.ServiceProvider.GetRequiredService(entry.Value) as ICommand;
+                    var commandResponse = await command?.Execute(new ToolCallContext(toolCall.Arguments))!;
+                    ChatLog.AddToolResponse(commandResponse);
+                }
+            }
         }
 
         return await _runtime.SendPrompt(ChatLog);
@@ -74,8 +105,8 @@ public class Agent(ILLMAbstractFactory factory)
 
     public void AddTool(ICommand tool)
     {
-        Type t =tool.GetType();
-        var executeMethod = t.GetMethod("Execute");
+        Type toolType =tool.GetType();
+        var executeMethod = toolType.GetMethod("Execute");
         var toolInfo = executeMethod.GetCustomAttribute(typeof(ToolInfoAttribute), false);
         var toolParameters = executeMethod.GetCustomAttributes(typeof(ToolParameter), false);
         var myTool = toolInfo as ToolInfoAttribute;
@@ -86,8 +117,8 @@ public class Agent(ILLMAbstractFactory factory)
             Description = myTool._description,
             Parameters = myParams
         };
-        Tools.Add(toolInformation, tool);
-        ChatLog.AddTool(factory.CreateLLMRunTimeTool(toolInformation.Name, toolInformation.Description, myParams));
+        Tools.Add(toolInformation, toolType);
+        ChatLog.AddTool(_factory.CreateLLMRunTimeTool(toolInformation.Name, toolInformation.Description, myParams));
     }
     
     public void SetImageReader(IImageReader reader)
